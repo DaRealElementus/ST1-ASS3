@@ -23,8 +23,6 @@ Start with Stage 6. Complete each stage only after the previous applicable stage
 
 UG: 6 → 7 → 8 → 9 → 12
 
-PG: 6 → 7 → 8 → 9 → 10 → 11 → 12
-
 Use ONE group repository and ONE evolving project/ throughout. The stage folders contain your response/evidence records; all templates are already present. Preserve previous code, tests, records and Git history. Never replace project/ with another starter or copy completed staff reference implementations: those are private staff material.
 
 Stages 10 and 11 are PG-only. UG skipping these stages is correct and complete. In an UG-only submission, retain the supplied PG-only templates unchanged as intentionally not applicable; do not fill them with fabricated N/A responses. Optional UG collaboration is voluntary and unassessed. Mixed groups protect the verified common Stage 9 SHA while PG extends the same project. Use only the teaching team's confirmed Copilot agent capability or approved equivalent route.
