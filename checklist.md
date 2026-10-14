@@ -140,6 +140,7 @@ Record: `stage12/stage12_activities_and_evidence.md`
 ---
 
 ## Ongoing for every member
+
 - [ ] Do my own human reasoning before using Copilot, and log significant Copilot use
 - [ ] Review at least one PR per stage that I didn't write
 - [ ] Pull `main` after every merge and re-run tests
