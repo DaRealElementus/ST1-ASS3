@@ -13,7 +13,9 @@ Use concise results and accessible artefact links rather than copying entire log
 ## A. Tutorial activities
 
 ### A.1 Classify all five statements
+
 For each, choose symptom, evidence or hypothesis/opinion, and explain your reason. These are discussion statements, not confirmed diagnoses.
+
 - Appointment disappears after cancellation.
 - The data-store removal path is probably being called.
 - The failing test shows store.find_appointment('A1') returns None.
@@ -24,31 +26,35 @@ The example line number is illustrative; inspect the actual line in your run. Th
 Response and reason: [complete]
 
 ### A.2 Build a debugging record
+
 Choose the cancelled-history scenario or a same-practitioner/time booking. Before changing code, record expected behaviour, observed behaviour, minimal reproduction, a hypothesis and evidence to inspect. Use a requirement to justify the expectation. Keep the initial hypothesis even if later evidence disproves it.
 
 Response and reason: [complete]
 
 ### A.3 Test defect or product defect
+
 A test expects cancelled appointments to be deleted, but FR-07 says history must be retained. What should be changed? Explain why. Also decide whether a test expecting different practitioners at the same time to conflict reflects AC-04.2. Do not assume every failing test is correct.
 
 Response and reason: [complete]
 
 ### A.4 Refactoring smell hunt
+
 Consider a hypothetical 70-line AppointmentService method containing duplicate status strings, direct collection manipulation, printing, validation and four nested conditionals. Identify the smells and propose small refactorings that preserve required behaviour. The direct collection work replaces the old storage-specific scenario; use the existing SmartCareDataStore boundary. Do not implement an extra architecture.
 Classify these proposed changes as refactoring, repair or feature: rename appt to appointment; extract a repeated conflict helper; add rescheduling; restore retained cancellation lookup; replace a magic status string with the existing enum. Explain the behaviour that must remain unchanged.
 
 Response and reason: [complete]
 
 ### A.5 Traceback and hypothesis ranking
+
 Using one actual failure, identify its exception/assertion, expected and observed values, test line, application call path and supporting requirement. List three plausible causes and rank them by fit with the available evidence. For each cause, name a check that could distinguish it from the others. Explain why a traceback alone does not establish the cause.
 
 Response and reason: [complete]
 
 ### A.6 Exit question
+
 Why is changing code immediately after seeing a failure often a poor debugging strategy?
 
 Response and reason: [complete]
-
 
 Classification responses (1–5, each with reason): [complete]
 Tutorial debugging record — expected; observed; reproduction; hypothesis; evidence to inspect: [complete]
@@ -94,11 +100,13 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/test; retain those initial facts and link them here.
 
 ### F8-01 human entry
+
 Likely cause and why plausible: [complete]
 Evidence intended to inspect / competing explanation / discriminating check: [complete]
 Member and saved sequence/time or commit showing this preceded consultation: [complete]
 
 ### F8-02 human entry
+
 Likely cause and why plausible: [complete]
 Evidence intended to inspect / competing explanation / discriminating check: [complete]
 Member and saved sequence/time or commit showing this preceded consultation: [complete]
@@ -108,14 +116,18 @@ Member and saved sequence/time or commit showing this preceded consultation: [co
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
 
 ### F8-01 Copilot review
+
 Actual prompt / output reference and member: [complete]
+
 1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 Final human conclusion and comparison with initial hypothesis: [complete]
 
 ### F8-02 Copilot review
+
 Actual prompt / output reference and member: [complete]
+
 1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
