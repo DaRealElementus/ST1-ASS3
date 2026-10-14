@@ -47,6 +47,16 @@ class Patient:
         """Return the patient identity supplied at construction."""
         return self._patient_id
 
+    def __repr__(self) -> str:
+        """Return a developer-facing description for debugging."""
+        return (
+            f'Patient(patient_id={self.patient_id!r}, name={self.name!r})'
+        )
+
+    def __str__(self) -> str:
+        """Return a readable description for display."""
+        return f'{self.name} ({self.patient_id})'
+
 
 class Practitioner:
     """A practitioner with validated identity, name and specialty."""
@@ -71,6 +81,17 @@ class Practitioner:
     def practitioner_id(self) -> str:
         """Return the practitioner identity supplied at construction."""
         return self._practitioner_id
+
+    def __repr__(self) -> str:
+        """Return a developer-facing description for debugging."""
+        return (
+            f'Practitioner(practitioner_id={self.practitioner_id!r}, '
+            f'name={self.name!r}, specialty={self.specialty!r})'
+        )
+
+    def __str__(self) -> str:
+        """Return a readable description for display."""
+        return f'{self.name} - {self.specialty} ({self.practitioner_id})'
 
 
 class Appointment:
@@ -125,6 +146,26 @@ class Appointment:
     def status(self) -> AppointmentStatus:
         """Return the current appointment status."""
         return self._status
+
+    def __repr__(self) -> str:
+        """Return a developer-facing description for debugging.
+
+        Participants are shown by ID to keep the output short.
+        """
+        return (
+            f'Appointment(appointment_id={self.appointment_id!r}, '
+            f'patient_id={self.patient.patient_id!r}, '
+            f'practitioner_id={self.practitioner.practitioner_id!r}, '
+            f'date_time={self.date_time!r}, status={self.status.name})'
+        )
+
+    def __str__(self) -> str:
+        """Return a readable description for display."""
+        return (
+            f'{self.appointment_id}: {self.patient.name} with '
+            f'{self.practitioner.name} at '
+            f'{self.date_time:%Y-%m-%d %H:%M} [{self.status.name}]'
+        )
 
     def cancel(self) -> None:
         """Cancel a SCHEDULED appointment without deleting it.
