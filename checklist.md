@@ -38,7 +38,7 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [ ] | Draft GitHub issues + acceptance criteria for the 3 operations | ND | AL |
 | [ ] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
 | [ ] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
-| [ ] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
+| [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
 | [ ] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
 | [ ] | Human review notes written **before** Copilot comparison | Each reviewer | – |
 | [ ] | Copilot use logged (prompt, output summary, check, Accept/Modify/Reject, reason, link) | Each owner | – |
