@@ -18,7 +18,7 @@ jobs:
         run: |
           # Target date converted to UTC (6 Nov 2026 12:59 UTC = 23:59 AEDT)
           DUE_DATE="2026-11-06 12:59"
-          
+          git pull
           NOW=$(date -u +%s)
           DUE=$(date -u -d "$DUE_DATE" +%s)
           DIFF=$((DUE - NOW))
