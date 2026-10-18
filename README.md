@@ -1,3 +1,7 @@
+# DUE IN
+<!-- COUNTDOWN_START -->
+<!-- COUNTDOWN_END -->
+
 # Software Technology 1 Assignment 3
 
 One group repository and one evolving SmartCare application.
