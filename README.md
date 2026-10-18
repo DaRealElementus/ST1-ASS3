@@ -1,5 +1,6 @@
 # DUE IN
 <!-- COUNTDOWN_START -->
+⏳ **Time Remaining:** **19 days, 10 hours** left (Due: 6 Nov, 23:59)
 <!-- COUNTDOWN_END -->
 
 # Software Technology 1 Assignment 3
