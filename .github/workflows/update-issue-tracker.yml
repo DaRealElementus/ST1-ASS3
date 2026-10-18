@@ -1,0 +1,182 @@
+
+name: Update README Issue Tracker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  issues:
+    types:
+      - opened
+      - edited
+      - assigned
+      - unassigned
+      - closed
+      - reopened
+      - labeled
+      - unlabeled
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: readme-issue-tracker
+  cancel-in-progress: false
+
+jobs:
+  update-issue-tracker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update README issue tracker
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const members = [
+              { code: "AL", username: "DaRealElementus" },
+              { code: "ND", username: "BilyFlowers" },
+              { code: "RW", username: "Proffo1" },
+              { code: "AR", username: "ExpertKaos" },
+            ];
+
+            const issues = await github.paginate(
+              github.rest.issues.listForRepo,
+              {
+                owner,
+                repo,
+                state: "open",
+                per_page: 100,
+              }
+            );
+
+            // Exclude pull requests, which are also returned by this API.
+            const realIssues = issues.filter(
+              issue => !issue.pull_request
+            );
+
+            const issueLink = issue =>
+              `- [#${issue.number}: ${issue.title}](${issue.html_url})`;
+
+            const assignedTo = username =>
+              realIssues.filter(issue =>
+                issue.assignees.some(
+                  person =>
+                    person.login.toLowerCase() ===
+                    username.toLowerCase()
+                )
+              );
+
+            const sections = [];
+
+            for (const member of members.slice(0, 3)) {
+              const assigned = assignedTo(member.username);
+
+              sections.push(
+                `### ${member.code} — ${member.username}\n\n` +
+                (assigned.length
+                  ? assigned.map(issueLink).join("\n")
+                  : "_No open issues assigned._")
+              );
+            }
+
+            const arAssigned = assignedTo("ExpertKaos");
+            const unassigned = realIssues.filter(
+              issue => issue.assignees.length === 0
+            );
+
+            sections.push(
+              `### AR — ExpertKaos / Unassigned\n\n` +
+              `**Assigned to ExpertKaos**\n\n` +
+              (arAssigned.length
+                ? arAssigned.map(issueLink).join("\n")
+                : "_No open issues assigned._") +
+              `\n\n**Unassigned issues**\n\n` +
+              (unassigned.length
+                ? unassigned.map(issueLink).join("\n")
+                : "_No unassigned issues._")
+            );
+
+            // Keep issues assigned to anyone outside the four listed
+            // accounts visible rather than silently dropping them.
+            const knownUsers = members.map(
+              member => member.username.toLowerCase()
+            );
+
+            const otherIssues = realIssues.filter(issue =>
+              issue.assignees.some(
+                person =>
+                  !knownUsers.includes(person.login.toLowerCase())
+              )
+            );
+
+            sections.push(
+              `### Other assignees\n\n` +
+              (otherIssues.length
+                ? otherIssues.map(issue => {
+                    const names = issue.assignees
+                      .map(person => person.login)
+                      .join(", ");
+                    return `${issueLink(issue)} — ${names}`;
+                  }).join("\n")
+                : "_No issues assigned to other users._")
+            );
+
+            const startMarker = "<!-- ISSUE_TRACKER_START -->";
+            const endMarker = "<!-- ISSUE_TRACKER_END -->";
+
+            const file = await github.rest.repos.getContent({
+              owner,
+              repo,
+              path: "README.md",
+            });
+
+            if (Array.isArray(file.data) ||
+                file.data.type !== "file") {
+              throw new Error("README.md is not a file.");
+            }
+
+            const content = Buffer.from(
+              file.data.content,
+              "base64"
+            ).toString("utf8");
+
+            const start = content.indexOf(startMarker);
+            const end = content.indexOf(endMarker);
+
+            if (start === -1 || end === -1 || end < start) {
+              throw new Error(
+                "Could not find the issue tracker markers in README.md."
+              );
+            }
+
+            const report =
+              "\n\n" +
+              `*Automatically updated by GitHub Actions. ` +
+              `${realIssues.length} open issues.*\n\n` +
+              sections.join("\n\n") +
+              "\n\n";
+
+            const updated =
+              content.slice(0, start + startMarker.length) +
+              report +
+              content.slice(end);
+
+            if (updated === content) {
+              core.info("README.md is already up to date.");
+              return;
+            }
+
+            await github.rest.repos.createOrUpdateFileContents({
+              owner,
+              repo,
+              path: "README.md",
+              message: "chore: update README issue tracker",
+              content: Buffer.from(updated).toString("base64"),
+              sha: file.data.sha,
+            });
+
+            core.info("README.md issue tracker updated.");
