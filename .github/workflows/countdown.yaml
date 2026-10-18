@@ -1,0 +1,51 @@
+name: Update Assignment Countdown
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs automatically at the start of every hour
+  workflow_dispatch: # Allows you to manually trigger it from the "Actions" tab anytime
+
+jobs:
+  update-timer:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Calculate Time and Update README
+        run: |
+          # Target date converted to UTC (6 Nov 2026 12:59 UTC = 23:59 AEDT)
+          DUE_DATE="2026-11-06 12:59"
+          
+          NOW=$(date -u +%s)
+          DUE=$(date -u -d "$DUE_DATE" +%s)
+          DIFF=$((DUE - NOW))
+          
+          if [ $DIFF -le 0 ]; then
+            MSG="### 🔴 OVERDUE / SUBMITTED (Due: 6 Nov, 23:59)"
+          else
+            DAYS=$((DIFF / 86400))
+            HOURS=$(( (DIFF % 86400) / 3600 ))
+            
+            if [ $DAYS -eq 0 ]; then
+              MSG="⚠️ **Time Remaining:** Only **$HOURS hours** left to submit!"
+            else
+              MSG="⏳ **Time Remaining:** **$DAYS days, $HOURS hours** left (Due: 6 Nov, 23:59)"
+            fi
+          fi
+          
+          # Inject the string cleanly between the markdown comment blocks
+          sed -i "/<!-- COUNTDOWN_START -->/,/<!-- COUNTDOWN_END -->/ {
+            /<!-- COUNTDOWN_START -->/! { /<!-- COUNTDOWN_END -->/! d }
+            /<!-- COUNTDOWN_START -->/a $MSG
+          }" README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@://github.com"
+          git add README.md
+          git diff-index --quiet HEAD || git commit -m "docs: auto-update assignment countdown"
+          git push
