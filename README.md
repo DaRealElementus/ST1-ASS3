@@ -1,6 +1,6 @@
 # DUE IN
 <!-- COUNTDOWN_START -->
-⏳ **Time Remaining:** **15 days, 14 hours** left (Due: 6 Nov, 23:59)
+⏳ **Time Remaining:** **15 days, 11 hours** left (Due: 6 Nov, 23:59)
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
