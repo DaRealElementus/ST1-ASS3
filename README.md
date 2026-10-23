@@ -31,12 +31,11 @@
 
 **Assigned to ExpertKaos**
 
-_No open issues assigned._
+- [#12: AppointmentService.list_practitioner_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/12)
 
 **Unassigned issues**
 
 - [#16: Update `project/README.md`](https://github.com/DaRealElementus/ST1-ASS3/issues/16)
-- [#12: AppointmentService.list_practitioner_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/12)
 - [#7: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/7)
 - [#3: PractitionerService.find_practitioner](https://github.com/DaRealElementus/ST1-ASS3/issues/3)
 
