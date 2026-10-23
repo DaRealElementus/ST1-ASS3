@@ -89,7 +89,7 @@ jobs:
             );
 
             sections.push(
-              `### AR — ExpertKaos / Unassigned\n\n` +
+              `### AR — ExpertKaos\n\n` +
               `**Assigned to ExpertKaos**\n\n` +
               (arAssigned.length
                 ? arAssigned.map(issueLink).join("\n")
