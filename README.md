@@ -27,7 +27,7 @@
 - [#6: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/6)
 - [#4: PatientService.find_patient](https://github.com/DaRealElementus/ST1-ASS3/issues/4)
 
-### AR — ExpertKaos / Unassigned
+### AR — ExpertKaos
 
 **Assigned to ExpertKaos**
 
