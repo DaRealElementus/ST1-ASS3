@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 12 open issues.*
+*Automatically updated by GitHub Actions. 11 open issues.*
 
 ### AL — DaRealElementus
 
@@ -18,7 +18,6 @@
 - [#14: tests/test_queries.py](https://github.com/DaRealElementus/ST1-ASS3/issues/14)
 - [#13: run_menu` in `console.py`](https://github.com/DaRealElementus/ST1-ASS3/issues/13)
 - [#9: test_services.py](https://github.com/DaRealElementus/ST1-ASS3/issues/9)
-- [#5: tests/test_services.py](https://github.com/DaRealElementus/ST1-ASS3/issues/5)
 
 ### RW — Proffo1
 
