@@ -33,9 +33,9 @@ Record: `stage06/stage06_activities_and_evidence.md`
 
 | Done | Task | Owner | Reviewer |
 |---|---|---|---|
-| [ ] | Read Stage 6 handout, domain/store and supplied tests together | All | – |
-| [ ] | Team agreement completed in record | All | – |
-| [ ] | Draft GitHub issues + acceptance criteria for the 3 operations | ND | AL |
+| [x] | Read Stage 6 handout, domain/store and supplied tests together | All | – |
+| [x] | Team agreement completed in record | All | – |
+| [x] | Draft GitHub issues + acceptance criteria for the 3 operations | ND | AL |
 | [x] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
 | [ ] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
 | [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
