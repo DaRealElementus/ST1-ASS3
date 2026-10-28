@@ -39,7 +39,7 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [x] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
 | [x] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
 | [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
-| [ ] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
+| [x] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
 | [ ] | Human review notes written **before** Copilot comparison | Each reviewer | – |
 | [ ] | Copilot use logged (prompt, output summary, check, Accept/Modify/Reject, reason, link) | Each owner | – |
 | [ ] | All merged; everyone pulled; full suite passes; SHA recorded | RW | All |
