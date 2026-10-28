@@ -37,7 +37,7 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [x] | Team agreement completed in record | All | – |
 | [x] | Draft GitHub issues + acceptance criteria for the 3 operations | ND | AL |
 | [x] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
-| [ ] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
+| [x] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
 | [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
 | [ ] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
 | [ ] | Human review notes written **before** Copilot comparison | Each reviewer | – |
