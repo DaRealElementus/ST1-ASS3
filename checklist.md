@@ -36,7 +36,7 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [ ] | Read Stage 6 handout, domain/store and supplied tests together | All | – |
 | [ ] | Team agreement completed in record | All | – |
 | [ ] | Draft GitHub issues + acceptance criteria for the 3 operations | ND | AL |
-| [ ] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
+| [x] | `PatientService.find_patient` (FR-02, AC-02.1/02.2) + tests | RW | AR |
 | [ ] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
 | [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
 | [ ] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
