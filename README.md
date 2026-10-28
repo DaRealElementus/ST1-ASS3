@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 14 open issues.*
+*Automatically updated by GitHub Actions. 12 open issues.*
 
 ### AL — DaRealElementus
 
@@ -25,7 +25,6 @@
 - [#13: run_menu` in `console.py`](https://github.com/DaRealElementus/ST1-ASS3/issues/13)
 - [#11: query/select_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/11)
 - [#6: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/6)
-- [#4: PatientService.find_patient](https://github.com/DaRealElementus/ST1-ASS3/issues/4)
 
 ### AR — ExpertKaos
 
@@ -35,7 +34,6 @@
 - [#15: tests/test_workflows.py](https://github.com/DaRealElementus/ST1-ASS3/issues/15)
 - [#12: AppointmentService.list_practitioner_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/12)
 - [#7: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/7)
-- [#3: PractitionerService.find_practitioner](https://github.com/DaRealElementus/ST1-ASS3/issues/3)
 
 **Unassigned issues**
 
