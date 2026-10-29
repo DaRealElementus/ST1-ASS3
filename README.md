@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 11 open issues.*
+*Automatically updated by GitHub Actions. 10 open issues.*
 
 ### AL — DaRealElementus
 
@@ -23,7 +23,6 @@
 
 - [#13: run_menu` in `console.py`](https://github.com/DaRealElementus/ST1-ASS3/issues/13)
 - [#11: query/select_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/11)
-- [#6: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/6)
 
 ### AR — ExpertKaos
 
