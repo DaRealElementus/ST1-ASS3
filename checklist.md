@@ -16,10 +16,10 @@ Tick `[x]` when done. **Owner** does the work; **Reviewer** does the human PR re
 | [x] | Record each member's cohort (UG/PG) in this file and root README | All |
 | [x] | Create ONE public GitHub repo; starter contents at root (no nested `SmartCare_Starter/`) | AL |
 | [x] | Add RW, AR, ND as collaborators | AL |
-| [ ] | Each member clones with their own GitHub account | All |
-| [ ] | Each member runs baseline: `cd project` → `python -m pip install -r requirements-dev.txt` → `python main.py` → `python -m pytest` (expect 8 passing) | All |
-| [ ] | Confirm Copilot access/mode with tutor (approved equivalent route if it fails) | All |
-| [ ] | Fill in root README group index (names, GitHub usernames, cohorts, repo URL) | ND |
+| [x] | Each member clones with their own GitHub account | All |
+| [x] | Each member runs baseline: `cd project` → `python -m pip install -r requirements-dev.txt` → `python main.py` → `python -m pytest` (expect 8 passing) | All |
+| [x] | Confirm Copilot access/mode with tutor (approved equivalent route if it fails) | All |
+| [x] | Fill in root README group index (names, GitHub usernames, cohorts, repo URL) | ND |
 
 **Cohorts:** RW: UG · AR: UG · AL: UG · ND: UG
 
@@ -40,9 +40,9 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [x] | `PractitionerService.find_practitioner` (FR-03) + tests | AR | ND |
 | [x] | `AppointmentService.cancel_appointment` (FR-06/07, AC-05.1–05.3) + tests | AL | RW |
 | [x] | Create `tests/test_services.py` – lookup/errors, identity, cancel/history, rejection without mutation | ND | AL |
-| [ ] | Human review notes written **before** Copilot comparison | Each reviewer | – |
-| [ ] | Copilot use logged (prompt, output summary, check, Accept/Modify/Reject, reason, link) | Each owner | – |
-| [ ] | All merged; everyone pulled; full suite passes; SHA recorded | RW | All |
+| [x] | Human review notes written **before** Copilot comparison | Each reviewer | – |
+| [x] | Copilot use logged (prompt, output summary, check, Accept/Modify/Reject, reason, link) | Each owner | – |
+| [x] | All merged; everyone pulled; full suite passes; SHA recorded | RW | All |
 | [ ] | Stage 6 record complete (own words, links to issues/PRs/tests/results) | ND | RW |
 
 ---
