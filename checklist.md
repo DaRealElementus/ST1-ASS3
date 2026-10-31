@@ -55,7 +55,7 @@ Record: `stage07/stage07_activities_and_evidence.md`
 | [ ] | Human TEST IDs and case design table (linked to FR/BR/AC) **before** Copilot | All | – |
 | [x] | Create `tests/test_domain.py` – Patient/Practitioner validation | RW | ND |
 | [x] | `tests/test_domain.py` – Appointment state, datetime rules, read-only identity | AR | RW |
-| [ ] | Extend `test_services.py` – registration duplicates (AC-01.2), booking (AC-03.x), conflicts (AC-04.x) | AL | AR |
+| [x] | Extend `test_services.py` – registration duplicates (AC-01.2), booking (AC-03.x), conflicts (AC-04.x) | AL | AR |
 | [ ] | Extend `test_services.py` – find appointment (AC-06.1), non-mutation on rejection (NFR-01) | ND | AL |
 | [ ] | Critique Copilot test candidates (what was accepted/modified/rejected and why) | All | – |
 | [ ] | Production fixes **only** for evidenced defects (link failing test) | As found | Other |

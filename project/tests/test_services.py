@@ -1,4 +1,5 @@
-"""Service checks: lookup/errors, identity, cancel/history, rejection.
+"""Service checks: lookup/errors, identity, cancel/history, rejection,
+registration duplicates, booking and practitioner conflicts.
 
 The patient and practitioner lookup tests need the Stage 6 TODOs and
 fail with NotImplementedError until those are completed.
@@ -236,4 +237,200 @@ def test_invalid_registration_rejected_without_mutation() -> None:
         clinic.practitioners.register_practitioner('D2', 'No Specialty', ' ')
     with pytest.raises(ValueError):
         clinic.practitioners.register_practitioner('D1', 'Other', 'Other')
+    assert snapshot(clinic.data_store) == before
+
+
+# Registration duplicates (AC-01.2)
+
+
+@pytest.mark.parametrize('patient_id', ['P1', '  P1  '])
+def test_duplicate_patient_id_keeps_original(patient_id: str) -> None:
+    """Verify a duplicate patient ID, even padded, keeps the original."""
+    clinic = make_clinic()
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.patients.register_patient(patient_id, 'Replacement')
+    assert clinic.patients.find_patient('P1') is clinic.patient
+    assert snapshot(clinic.data_store) == before
+
+
+@pytest.mark.parametrize('practitioner_id', ['D1', '  D1  '])
+def test_duplicate_practitioner_id_keeps_original(
+    practitioner_id: str,
+) -> None:
+    """Verify a duplicate practitioner ID, even padded, keeps the original."""
+    clinic = make_clinic()
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.practitioners.register_practitioner(
+            practitioner_id, 'Replacement', 'Other',
+        )
+    assert clinic.practitioners.find_practitioner('D1') is clinic.practitioner
+    assert snapshot(clinic.data_store) == before
+
+
+def test_new_ids_register_after_rejected_duplicates() -> None:
+    """Verify a rejected duplicate does not block a new unique ID."""
+    clinic = make_clinic()
+    with pytest.raises(ValueError):
+        clinic.patients.register_patient('P1', 'Replacement')
+    with pytest.raises(ValueError):
+        clinic.practitioners.register_practitioner('D1', 'Other', 'Other')
+    patient = clinic.patients.register_patient('P2', 'Casey Example')
+    practitioner = clinic.practitioners.register_practitioner(
+        'D2', 'Morgan Example', 'Cardiology',
+    )
+    assert clinic.data_store.list_patients() == [clinic.patient, patient]
+    assert clinic.data_store.list_practitioners() == [
+        clinic.practitioner, practitioner,
+    ]
+
+
+# Booking (AC-03.x)
+
+
+def test_booking_stores_scheduled_appointment() -> None:
+    """Verify a booking stores the requested details as SCHEDULED."""
+    clinic = make_clinic()
+    appointment = clinic.appointments.book_appointment(
+        'A1', 'P1', 'D1', NINE_AM,
+    )
+    assert appointment.appointment_id == 'A1'
+    assert appointment.patient is clinic.patient
+    assert appointment.practitioner is clinic.practitioner
+    assert appointment.date_time == NINE_AM
+    assert appointment.status is AppointmentStatus.SCHEDULED
+    assert clinic.data_store.list_appointments() == [appointment]
+
+
+def test_booking_links_the_requested_participants() -> None:
+    """Verify each booking links its own patient and practitioner."""
+    clinic = make_clinic()
+    casey = clinic.patients.register_patient('P2', 'Casey Example')
+    morgan = clinic.practitioners.register_practitioner(
+        'D2', 'Morgan Example', 'Cardiology',
+    )
+    first = clinic.appointments.book_appointment('A1', 'P1', 'D2', NINE_AM)
+    second = clinic.appointments.book_appointment('A2', 'P2', 'D1', TEN_AM)
+    assert first.patient is clinic.patient
+    assert first.practitioner is morgan
+    assert second.patient is casey
+    assert second.practitioner is clinic.practitioner
+    assert clinic.data_store.list_appointments() == [first, second]
+
+
+def test_booking_normalises_padded_ids() -> None:
+    """Verify padded IDs resolve to the stored records and trimmed ID."""
+    clinic = make_clinic()
+    appointment = clinic.appointments.book_appointment(
+        '  A1  ', '  P1  ', '  D1  ', NINE_AM,
+    )
+    assert appointment.appointment_id == 'A1'
+    assert appointment.patient is clinic.patient
+    assert appointment.practitioner is clinic.practitioner
+    assert clinic.appointments.find_appointment('A1') is appointment
+
+
+@pytest.mark.parametrize(
+    'args',
+    [
+        (None, 'P1', 'D1', TEN_AM),
+        ('  A1  ', 'P1', 'D1', TEN_AM),
+        ('A2', None, 'D1', TEN_AM),
+        ('A2', 'P1', None, TEN_AM),
+        ('A2', 'P1', '  ', TEN_AM),
+        ('A2', 'P1', 'D1', None),
+        ('A2', 'P1', 'D1', datetime(2026, 10, 1, 10, 0, 0, 1)),
+    ],
+    ids=[
+        'none-appointment-id', 'padded-duplicate-id', 'none-patient',
+        'none-practitioner', 'blank-practitioner', 'none-time', 'microseconds',
+    ],
+)
+def test_booking_invalid_values_rejected(args: tuple[Any, ...]) -> None:
+    """Verify invalid booking values raise ValueError and change nothing."""
+    clinic = make_clinic()
+    clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.appointments.book_appointment(*args)
+    assert snapshot(clinic.data_store) == before
+
+
+# Practitioner conflicts (AC-04.x)
+
+
+@pytest.mark.parametrize('practitioner_id', ['D1', '  D1  '])
+def test_conflict_rejected_for_a_different_patient(
+    practitioner_id: str,
+) -> None:
+    """Verify the practitioner conflict applies whichever patient books."""
+    clinic = make_clinic()
+    clinic.patients.register_patient('P2', 'Casey Example')
+    original = clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    with pytest.raises(ValueError):
+        clinic.appointments.book_appointment(
+            'A2', 'P2', practitioner_id, NINE_AM,
+        )
+    assert original.status is AppointmentStatus.SCHEDULED
+    assert clinic.data_store.list_appointments() == [original]
+
+
+def test_different_practitioners_can_share_a_time() -> None:
+    """Verify different practitioners at one time do not conflict."""
+    clinic = make_clinic()
+    clinic.patients.register_patient('P2', 'Casey Example')
+    clinic.practitioners.register_practitioner(
+        'D2', 'Morgan Example', 'Cardiology',
+    )
+    first = clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    second = clinic.appointments.book_appointment('A2', 'P2', 'D2', NINE_AM)
+    assert first.status is AppointmentStatus.SCHEDULED
+    assert second.status is AppointmentStatus.SCHEDULED
+    assert clinic.data_store.list_appointments() == [first, second]
+
+
+@pytest.mark.parametrize(
+    'other_time',
+    [
+        datetime(2026, 10, 1, 8, 59),
+        datetime(2026, 10, 1, 9, 1),
+        datetime(2026, 10, 2, 9),
+    ],
+    ids=['minute-before', 'minute-after', 'next-day'],
+)
+def test_same_practitioner_at_another_time_allowed(
+    other_time: datetime,
+) -> None:
+    """Verify only an exact time match conflicts for a practitioner."""
+    clinic = make_clinic()
+    first = clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    second = clinic.appointments.book_appointment('A2', 'P1', 'D1', other_time)
+    assert second.date_time == other_time
+    assert clinic.data_store.list_appointments() == [first, second]
+
+
+def test_completed_appointment_does_not_block_its_slot() -> None:
+    """Verify only a SCHEDULED appointment holds the practitioner's time."""
+    clinic = make_clinic()
+    completed = Appointment(
+        'A1', clinic.patient, clinic.practitioner, NINE_AM,
+        AppointmentStatus.COMPLETED,
+    )
+    clinic.data_store.add_appointment(completed)
+    rebooked = clinic.appointments.book_appointment('A2', 'P1', 'D1', NINE_AM)
+    assert completed.status is AppointmentStatus.COMPLETED
+    assert rebooked.status is AppointmentStatus.SCHEDULED
+    assert clinic.data_store.list_appointments() == [completed, rebooked]
+
+
+def test_rebooked_slot_conflicts_again() -> None:
+    """Verify a rebooked slot blocks despite the earlier cancelled record."""
+    clinic = make_clinic()
+    clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    clinic.appointments.cancel_appointment('A1')
+    clinic.appointments.book_appointment('A2', 'P1', 'D1', NINE_AM)
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.appointments.book_appointment('A3', 'P1', 'D1', NINE_AM)
     assert snapshot(clinic.data_store) == before
