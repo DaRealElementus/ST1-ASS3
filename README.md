@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 10 open issues.*
+*Automatically updated by GitHub Actions. 9 open issues.*
 
 ### AL — DaRealElementus
 
@@ -31,7 +31,6 @@
 - [#16: Update `project/README.md`](https://github.com/DaRealElementus/ST1-ASS3/issues/16)
 - [#15: tests/test_workflows.py](https://github.com/DaRealElementus/ST1-ASS3/issues/15)
 - [#12: AppointmentService.list_practitioner_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/12)
-- [#7: tests/test_domain.py](https://github.com/DaRealElementus/ST1-ASS3/issues/7)
 
 **Unassigned issues**
 
