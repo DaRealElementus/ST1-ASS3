@@ -434,3 +434,48 @@ def test_rebooked_slot_conflicts_again() -> None:
     with pytest.raises(ValueError):
         clinic.appointments.book_appointment('A3', 'P1', 'D1', NINE_AM)
     assert snapshot(clinic.data_store) == before
+
+
+# Find appointment (AC-06.1) and non-mutation (NFR-01)
+
+
+def test_find_appointment_trims_padded_id() -> None:
+    """Verify a padded ID finds the same stored appointment."""
+    clinic = make_clinic()
+    appointment = clinic.appointments.book_appointment(
+        'A1', 'P1', 'D1', NINE_AM,
+    )
+    assert clinic.appointments.find_appointment('  A1  ') is appointment
+
+
+def test_find_appointment_returns_cancelled_record() -> None:
+    """Verify a cancelled appointment is still found with its status."""
+    clinic = make_clinic()
+    appointment = clinic.appointments.book_appointment(
+        'A1', 'P1', 'D1', NINE_AM,
+    )
+    clinic.appointments.cancel_appointment('A1')
+    found = clinic.appointments.find_appointment('A1')
+    assert found is appointment
+    assert found.status is AppointmentStatus.CANCELLED
+
+
+@pytest.mark.parametrize(
+    ('appointment_id', 'error'),
+    [('missing', LookupError), ('', ValueError), ('   ', ValueError),
+     (None, ValueError)],
+)
+def test_find_appointment_rejected_without_mutation(
+    appointment_id: Any,
+    error: type[Exception],
+) -> None:
+    """Verify a rejected find leaves existing appointments unchanged."""
+    clinic = make_clinic()
+    first = clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    second = clinic.appointments.book_appointment('A2', 'P1', 'D1', TEN_AM)
+    before = snapshot(clinic.data_store)
+    with pytest.raises(error):
+        clinic.appointments.find_appointment(appointment_id)
+    assert snapshot(clinic.data_store) == before
+    assert clinic.appointments.find_appointment('A1') is first
+    assert clinic.appointments.find_appointment('A2') is second
