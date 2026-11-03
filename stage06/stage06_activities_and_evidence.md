@@ -149,7 +149,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Test command, directory and observed result: not recorded in the PR
 - Another-member reviewer: ND (BilyFlowers)
 - Human observations recorded before Copilot: comment "Great work Andrew Rainey." at 2026-10-28 06:12:14 UTC, posted after the merge
-- Requirement, responsibilities, test assertions and unrelated-scope checks: not recorded. [TODO]
+- Requirement, responsibilities, test assertions and unrelated-scope checks: ND read through the code change in `services.py` and judged that `find_practitioner` works as FR-03 requires: it returns the stored practitioner and raises `LookupError` when the ID is not found. ND then ran the tests locally before merging, and they passed. The exact command and pass count were not recorded at the time. These checks were done but not written on the PR; they are recorded here afterwards.
 - Key feedback: none recorded
 - Author response/change and verification: not applicable
 - Reviewer recheck and approval: no formal GitHub approval; the reviewer merged
@@ -166,7 +166,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Feature branch: `Test-Services`
 - Changed behaviour: adds `project/tests/test_services.py` (lookup/errors, identity, cancel/history, booking and registration rejection without mutation). No production code changed.
 - Meaningful commits: [c6b38ad](https://github.com/DaRealElementus/ST1-ASS3/commit/c6b38ad) (tests), [3ca30be](https://github.com/DaRealElementus/ST1-ASS3/commit/3ca30be) (checklist), [1bf5634](https://github.com/DaRealElementus/ST1-ASS3/commit/1bf5634) (merge of `main` into the branch by AL)
-- Test command, directory and observed result: [TODO: `python -m pytest` in `project/`; record the observed count]
+- Test command, directory and observed result: `py -3.13 -m pytest` in `project/` on the merge commit `ec4d4a2`: 38 passed (30 in `test_services.py`, 8 in `test_starter.py`), run by ND on Python 3.13.16 / pytest 8.3.5. The PR itself did not record a count before merge.
 - Another-member reviewer: AL (DaRealElementus)
 - Human observations recorded before Copilot: none recorded on the PR. [TODO]
 - Requirement, responsibilities, test assertions and unrelated-scope checks: [TODO]
@@ -177,7 +177,7 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Significant Copilot assistance: none (no member used Copilot)
 - Linked issue closure: #5 closed 2026-10-28 06:15 UTC
 - Each member updated main: [TODO]
-- Integrated verification after merge: [TODO]
+- Integrated verification after merge: ND checked out `ec4d4a2` and ran `py -3.13 -m pytest` from `project/`: 38 passed in 0.26s.
 
 ## H Copilot collaboration record
 
@@ -297,17 +297,17 @@ Every change follows the cycle: update `main` → issue → focused branch → c
 ## M Completion and handover
 
 - Starting SHA: `f924876bedf303d4fb4362fd1a104ee2cd9f7482`
-- Final Stage 6 code SHA: `ec4d4a2c053481d075c1a86cb5c3841ad37cc72f` (merge of PR #21; later commits up to `6d5f8bd` only change `README.md`/`checklist.md`) [TODO: confirm after running the tests]
-- Test command: `python -m pytest`
+- Final Stage 6 code SHA: `ec4d4a2c053481d075c1a86cb5c3841ad37cc72f` (merge of PR #21; later commits up to `6d5f8bd` only change `README.md`/`checklist.md`). Confirmed by running the full suite on this SHA.
+- Test command: `py -3.13 -m pytest` (Python 3.13.16, pytest 8.3.5, the verified baseline)
 - Working directory: `project/`
-- Observed result: [TODO: run on the SHA above and record the exact output, e.g. "N passed"]
+- Observed result: `38 passed in 0.26s` (30 in `tests/test_services.py`, 8 in `tests/test_starter.py`)
 - PR and another-member reviewer: [#1](https://github.com/DaRealElementus/ST1-ASS3/pull/1) (RW), [#19](https://github.com/DaRealElementus/ST1-ASS3/pull/19) (AR), [#20](https://github.com/DaRealElementus/ST1-ASS3/pull/20) (ND), [#21](https://github.com/DaRealElementus/ST1-ASS3/pull/21) (AL)
 - Unresolved issue or none: no issue for FR-06/07; issue #4 has no AC in its body; human reviews are brief (section G); no Copilot comparison because no member used Copilot (sections H/I); per-member pull and integrated test run not recorded
 - Stage 7 handover status: unresolved work (see above)
 - Final submitted SHA if later than tested SHA: [TODO: the commit containing this record; evidence-only difference]
 
 - [x] Three Stage 6 service targets completed and checked.
-- [ ] Original supplied tests retained and passing.
+- [x] Original supplied tests retained and passing.
 - [ ] At least two focused issues link requirements and acceptance criteria.
 - [ ] Feature work reviewed by another member using the actual diff.
 - [ ] Human-first review and required Copilot comparison recorded.
