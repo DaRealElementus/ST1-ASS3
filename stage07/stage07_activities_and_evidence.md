@@ -144,9 +144,21 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| `python -m pytest -q` | `project/` | `890f9563d03b9c05fc8a3ce3d128b86c69981e3e` | 180 | 0 | None | None (no product or test defect observed) | Full accumulated suite (starter, domain, services) run on clean `main` after `git pull`. All 180 collected tests passed in 0.27s. The count exceeds the number of test functions because of parametrisation. |
 
-Individual test runs and changed-order independence evidence: [commands, results, links]
+Individual test runs and changed-order independence evidence:
+
+All runs: working directory `project/`, code SHA `890f9563d03b9c05fc8a3ce3d128b86c69981e3e` (main, clean working tree after `git pull`), Python 3.14, pytest 8.3.5.
+
+| Command | Result |
+|---|---|
+| `python -m pytest tests/test_starter.py -q` | 8 passed, 0 failed |
+| `python -m pytest tests/test_domain.py -q` | 113 passed, 0 failed |
+| `python -m pytest tests/test_services.py -q` | 59 passed, 0 failed |
+| `python -m pytest -q` (full suite) | 180 passed, 0 failed |
+| `python -m pytest tests/test_services.py tests/test_domain.py tests/test_starter.py -q` (files in reversed order) | 180 passed, 0 failed |
+
+Interpretation: each file passes on its own, so no file depends on state set up by another. The per-file counts (8 + 113 + 59) sum to the full-suite total of 180, so nothing was skipped or lost when the files ran together. Running the files in reverse order gave the same 180 passes, which is evidence the files do not depend on each other's execution order. This does not test order within a file; pytest's default ordering within each file was unchanged.
 Optional tutor-led demonstration notes: [optional; leave blank if not used]
 A meaningful test should detect a relevant incorrect result. Students do not have to perform the demonstration or submit failure/restoration evidence for assessment. The tutor restores the example and reruns its tests. This is not a Stage 8 fault activity.
 Requirement → test → failure/observation → diagnosis → change → verification: [concise links where applicable]

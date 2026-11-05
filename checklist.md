@@ -59,7 +59,7 @@ Record: `stage07/stage07_activities_and_evidence.md`
 | [x] | Extend `test_services.py` – find appointment (AC-06.1), non-mutation on rejection (NFR-01) | ND | AL |
 | [x] | Critique Copilot test candidates (what was accepted/modified/rejected and why) | All | – |
 | [x] | Production fixes **only** for evidenced defects (link failing test) | As found | Other |
-| [ ] | Individual + full test runs recorded honestly (command, dir, result, SHA) | AR | – |
+| [x] | Individual + full test runs recorded honestly (command, dir, result, SHA) | AR | – |
 | [ ] | Stage 7 record complete | RW | AL |
 
 ---
