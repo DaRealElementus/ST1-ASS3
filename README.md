@@ -1,6 +1,6 @@
 # DUE IN
 <!-- COUNTDOWN_START -->
-⚠️ **Time Remaining:** Only **4 hours** left to submit!
+### 🔴 OVERDUE / SUBMITTED (Due: 6 Nov, 23:59)
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
