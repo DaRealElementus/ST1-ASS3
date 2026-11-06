@@ -1,6 +1,6 @@
 # DUE IN
 <!-- COUNTDOWN_START -->
-⚠️ **Time Remaining:** Only **16 hours** left to submit!
+⚠️ **Time Remaining:** Only **11 hours** left to submit!
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
