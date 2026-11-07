@@ -66,7 +66,9 @@ Assign TEST IDs before implementation or generation. Use canonical AC IDs with t
 
 | Requirement | Acceptance criterion | Test ID | Test type | Test name / location | Expected behaviour | Result / observed status | Supplied or student-authored |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| FR-08 Find appointment | AC-06.1 | TS-ND-01 | Boundary | `test_find_appointment_trims_padded_id`, `project/tests/test_services.py` | A padded ID (`'  A1  '`) returns the same stored appointment object | Passed | Student-authored (ND, PR #27) |
+| FR-08 Find appointment; FR-07 Retain cancelled history | AC-06.1 | TS-ND-02 | Positive | `test_find_appointment_returns_cancelled_record`, `project/tests/test_services.py` | After cancelling, finding `A1` returns the same object with status `CANCELLED` | Passed | Student-authored (ND, PR #27) |
+| FR-08 Find appointment; NFR-01 | AC-06.1 (unknown ID); service contract "Reject a blank or invalid ID with ValueError; do not create records" (blank/`None`) | TS-ND-03 | Negative | `test_find_appointment_rejected_without_mutation` (4 cases), `project/tests/test_services.py` | With A1 and A2 stored: `'missing'` raises `LookupError`; `''`, `'   '` and `None` raise `ValueError`; the store snapshot is unchanged and A1/A2 are still found as the same objects | Passed (4/4) | Student-authored (ND, PR #27) |
 
 ## C Test Design
 
@@ -98,7 +100,11 @@ Use fresh shared SmartCareDataStore state, registered objects and completed Stag
 
 | Test ID | Behaviour | Requirement / criterion | Test file/function | Result |
 |---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] |
+| TS-ND-01 | Find appointment with a padded ID returns the stored object | FR-08, AC-06.1 | `tests/test_services.py::test_find_appointment_trims_padded_id` | Passed |
+| TS-ND-02 | A cancelled appointment is still found, with status `CANCELLED` | FR-08, FR-07, AC-06.1 | `tests/test_services.py::test_find_appointment_returns_cancelled_record` | Passed |
+| TS-ND-03 | Unknown ID raises `LookupError`; blank/`None` ID raises `ValueError`; existing appointments unchanged | FR-08, AC-06.1, NFR-01 | `tests/test_services.py::test_find_appointment_rejected_without_mutation` (4 cases) | 4 passed |
+
+Run: `py -3.13 -m pytest tests/test_services.py -q -k find_appointment` from `project/` on `main` at `25b6002fec177d1641782ecae9a88b267acf2dc4` (tests added in PR #27, merge `fd0f054`): 6 passed, 53 deselected.
 
 ## G Negative and Boundary Cases
 
