@@ -94,8 +94,8 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
   - `project/tests/test_services.py::test_cancel_retains_appointment_and_guards_repeat`: `LookupError: Appointment not found` at `smartcare/services.py:134` on the second `cancel_appointment('A1')`, where the test expects `ValueError`.
 - Human hypothesis and intended checks: see E, F8-02.
 - Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Smallest justified fix / diff / why other behaviour is preserved: Remove the second half of the `and` comparison. we do not need to filter out the cancelled appointments
+- Repair SHA / focused verification result: 5e0bab2ed1011eab2a3d7b2c2b712b0158834bae
 
 ## E. Human-first hypotheses
 
@@ -142,7 +142,7 @@ Final human conclusion and comparison with initial hypothesis: [complete]
 | F8-01 before repair | [complete] | [complete] | [complete] |
 | F8-01 after repair | [complete] | [complete] | [complete] |
 | F8-02 before repair | `cd6393a2ca5e25571f3eb4f1b99fc64769a03e21` (`fix/F8-02-retained-history-lookup`, no changes) | `py -3.13 -m pytest -q` and `py -3.13 -m pytest -q tests/test_services.py -k "returns_cancelled_record or guards_repeat"`, in `project/` | Full suite: 8 failed, 172 passed. Focused: 2 failed (`test_find_appointment_returns_cancelled_record`, `test_cancel_retains_appointment_and_guards_repeat`), both `LookupError: Appointment not found`. The other 6 failures are F8-01. |
-| F8-02 after repair | [complete] | [complete] | [complete] |
+| F8-02 after repair | `5e0bab2ed1011eab2a3d7b2c2b712b0158834bae` | `cd project` `py -m pytest` | 6 failures from F8-01, none from F8-02 |
 | Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
 
 Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
