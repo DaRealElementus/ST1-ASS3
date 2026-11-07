@@ -73,7 +73,7 @@ Record: `stage08/stage08_activities_and_evidence.md`
 | [ ] | Clean debugging branch created from verified `main` | ND | – |
 | [ ] | Human hypotheses recorded **before** Copilot | All | – |
 | [ ] | Fault 1: reproduce symptom → diagnose → minimal repair in `data_store.py` | RW + AR (pair) | AL |
-| [ ] | Fault 2: reproduce symptom → diagnose → minimal repair in `data_store.py` | AL + ND (pair) | RW |
+| [x] | Fault 2: reproduce symptom → diagnose → minimal repair in `data_store.py` | AL + ND (pair) | RW |
 | [ ] | Add `tests/test_regressions.py` covering both faults | AR | ND |
 | [ ] | Focused + full tests run before and after repairs | ND | – |
 | [ ] | One justified refactoring; full suite passes before and after | AL + RW (pair) | AR |
@@ -89,7 +89,7 @@ Starting point on `Stage-8-Debugging`: `cd project` → `python -m pytest -q` gi
   - *Symptom to reproduce:* Book the same practitioner twice at the same time and see whether it's rejected. Then try two *different* practitioners at the same time.
   - *Hint:* Read each condition in the `if` aloud and ask which appointments it should match. Compare it with the requirement for a conflict (AC-04.x).
   - *Failing tests to start from:* `test_different_practitioners_can_share_a_time`, `test_conflict_rule_and_different_practitioner`
-- [ ] **F8-02 – retained-history lookup.**
+- [x] **F8-02 – retained-history lookup.**
   - *Where to look:* `find_appointment`.
   - *Symptom to reproduce:* Book an appointment, cancel it, then try to find it, and try cancelling it a second time.
   - *Hint:* What should happen to a cancelled appointment's record (FR-06/07, AC-05.x, AC-06.1)? Does the lookup treat every stored appointment the same way?
