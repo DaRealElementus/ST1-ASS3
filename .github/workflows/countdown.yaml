@@ -28,7 +28,7 @@ jobs:
           DIFF=$((DUE - NOW))
           
           if [ $DIFF -le 0 ]; then
-            MSG="### 🔴 OVERDUE / SUBMITTED (Due: 6 Nov, 23:59)"
+            MSG="### 🔴 OVERDUE / SUBMITTED (Due: 9 Nov, 23:59)"
           else
             DAYS=$((DIFF / 86400))
             HOURS=$(( (DIFF % 86400) / 3600 ))
@@ -36,7 +36,7 @@ jobs:
             if [ $DAYS -eq 0 ]; then
               MSG="⚠️ **Time Remaining:** Only **$HOURS hours** left to submit!"
             else
-              MSG="⏳ **Time Remaining:** **$DAYS days, $HOURS hours** left (Due: 6 Nov, 23:59)"
+              MSG="⏳ **Time Remaining:** **$DAYS days, $HOURS hours** left (Due: 9 Nov, 23:59)"
             fi
           fi
           
