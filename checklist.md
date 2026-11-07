@@ -88,7 +88,7 @@ Record: `stage09/stage09_activities_and_evidence.md`
 | Done | Task | Owner | Reviewer |
 |---|---|---|---|
 | [ ] | Design query cases + console workflow **before** coding/Copilot | All | – |
-| [ ] | `appointment_sort_key` (FP-03, QRY-03) | AL | RW |
+| [x] | `appointment_sort_key` (FP-03, QRY-03) | AL | RW |
 | [ ] | `select_appointments` – pure, explicit inputs, new list (QRY-01/02/03, FP-01/02) | AL + RW (pair) | AR |
 | [ ] | `AppointmentService.list_practitioner_appointments` – validation, LookupError/ValueError (QRY-04) | AR | AL |
 | [ ] | `run_menu` in `console.py` – full menu, status text → enum, recovers from bad input (UI-01/02) | RW + ND | AL |
