@@ -93,9 +93,9 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
   - `project/tests/test_services.py::test_find_appointment_returns_cancelled_record`: `LookupError: Appointment not found` at `smartcare/services.py:134`, raised from `clinic.appointments.find_appointment('A1')` after the cancel.
   - `project/tests/test_services.py::test_cancel_retains_appointment_and_guards_repeat`: `LookupError: Appointment not found` at `smartcare/services.py:134` on the second `cancel_appointment('A1')`, where the test expects `ValueError`.
 - Human hypothesis and intended checks: see E, F8-02.
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
+- Supported root cause and inspected code/runtime evidence: The hypothesis in E was confirmed. `SmartCareDataStore.find_appointment` only returned an appointment if its ID matched **and** `appointment.status.value != "cancelled"`. A cancelled appointment was still stored (it stays in `list_appointments()`), but the lookup skipped it and returned `None`, so `AppointmentService.find_appointment` raised `LookupError`. The repeat cancel failed for the same reason: `cancel_appointment` could not find the record, so it raised `LookupError` instead of reaching the "already cancelled" `ValueError`. Removing only that condition made both F8-02 tests pass, which confirms it was the cause.
 - Smallest justified fix / diff / why other behaviour is preserved: Remove the second half of the `and` comparison. we do not need to filter out the cancelled appointments
-- Repair SHA / focused verification result: 5e0bab2ed1011eab2a3d7b2c2b712b0158834bae
+- Repair SHA / focused verification result: 5e0bab2ed1011eab2a3d7b2c2b712b0158834bae. Focused: `py -3.13 -m pytest -q tests/test_services.py -k "returns_cancelled_record or guards_repeat"` in `project/`: 2 passed, 57 deselected.
 
 ## E. Human-first hypotheses
 
@@ -128,12 +128,13 @@ Final human conclusion and comparison with initial hypothesis: [complete]
 
 ### F8-02 Copilot review
 
-Actual prompt / output reference and member: [complete]
+Actual prompt / output reference and member: ND, 2026-11-08, GitHub Copilot Chat in VS Code, Ask mode (read-only). The prompt gave the observed behaviour, expected behaviour (FR-06/07, AC-06.1, AC-05.x), the reproduction steps, both failing tests, ND's hypothesis from E and the original faulty `find_appointment` code from `cd6393a`, and asked for three ranked causes with discriminating checks, with no rewrite and no invented requirements. Screenshot of the prompt and reply kept by ND outside the repository. The prompt was run after the repair had been merged; the original code was quoted in the prompt so the review applied to the faulty version.
 
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+1. Most likely: `find_appointment` filters out cancelled records, so `A1` is skipped, `None` is returned and the service raises `LookupError`; the repeat cancel fails at the lookup before reaching the domain's already-cancelled check. Check: call `data_store.find_appointment('A1')` directly after cancelling; `None` while `list_appointments()` still contains `A1` confirms it. Observed evidence: `test_cancel_retains_appointment_and_guards_repeat` shows `A1` is still in `list_appointments()`, and removing only the status condition (`5e0bab2`) made both F8-02 tests pass. **Correct. Accept**: it matches the cause found and the repair that fixed it.
+2. Less likely: the stored ID does not match the lookup ID, for example because of extra whitespace. Check: compare `repr()` of each stored ID with `repr('A1')`. Observed evidence: the appointment is booked and looked up as `'A1'`, both booking and lookup strip whitespace, `test_find_appointment_trims_padded_id` passes, and the same lookup works before the cancel. **Wrong for this fault. Reject**: the lookup only fails after the status changes, so the ID comparison is not the cause.
+3. Least likely: the lookup and the list use different store instances or different loaded code. Check: compare `id(service.data_store)` with the store used for the list, and inspect the loaded method. Observed evidence: each test builds one `SmartCareDataStore` in `make_clinic()` and passes the same object to every service, and changing only `SmartCareDataStore.find_appointment` changed the result. **Wrong. Reject**: one shared store is used, and the edited method is the one that runs.
+
+Final human conclusion and comparison with initial hypothesis: Copilot's top-ranked cause is the same as ND's hypothesis in E, so the initial hypothesis stands. Copilot added a sharper discriminating check (calling the store's `find_appointment` directly), which separates "not stored" from "stored but not found" more directly than the test alone. Causes 2 and 3 were rejected using existing test evidence. Copilot also pointed out that the workspace code no longer has the filter, which is correct because the repair was already merged. No Copilot code was used.
 
 ## G. Failing to passing regression evidence
 
@@ -142,7 +143,7 @@ Final human conclusion and comparison with initial hypothesis: [complete]
 | F8-01 before repair | [complete] | [complete] | [complete] |
 | F8-01 after repair | [complete] | [complete] | [complete] |
 | F8-02 before repair | `cd6393a2ca5e25571f3eb4f1b99fc64769a03e21` (`fix/F8-02-retained-history-lookup`, no changes) | `py -3.13 -m pytest -q` and `py -3.13 -m pytest -q tests/test_services.py -k "returns_cancelled_record or guards_repeat"`, in `project/` | Full suite: 8 failed, 172 passed. Focused: 2 failed (`test_find_appointment_returns_cancelled_record`, `test_cancel_retains_appointment_and_guards_repeat`), both `LookupError: Appointment not found`. The other 6 failures are F8-01. |
-| F8-02 after repair | `5e0bab2ed1011eab2a3d7b2c2b712b0158834bae` | `cd project` `py -m pytest` | 6 failures from F8-01, none from F8-02 |
+| F8-02 after repair | `5e0bab2ed1011eab2a3d7b2c2b712b0158834bae` | `cd project` `py -m pytest`; rechecked by ND on `Stage-8-Debugging` at `cd66ffa` (merge of PR #32, same code as `5e0bab2`) with `py -3.13 -m pytest -q` and the focused command in D | Full suite: 6 failed, 174 passed. All 6 failures are F8-01 (practitioner conflict); none from F8-02. Focused F8-02 tests: 2 passed. |
 | Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
 
 Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
