@@ -479,3 +479,146 @@ def test_find_appointment_rejected_without_mutation(
     assert snapshot(clinic.data_store) == before
     assert clinic.appointments.find_appointment('A1') is first
     assert clinic.appointments.find_appointment('A2') is second
+
+
+
+# Practitioner appointment listing (Stage 9, QRY-04)
+
+
+def make_busy_clinic() -> Clinic:
+    """Return a clinic where D1 has three appointments and D2 has one.
+
+    D1: A3 at 09:00 (SCHEDULED), A1 at 10:00 (CANCELLED),
+    A2 at 10:00 (COMPLETED). D2: A4 at 09:00. Booked out of order so the
+    ordering is the service's work, not insertion order.
+    """
+    clinic = make_clinic()
+    clinic.patients.register_patient('P2', 'Casey Example')
+    clinic.practitioners.register_practitioner(
+        'D2', 'Morgan Example', 'Cardiology',
+    )
+    clinic.data_store.add_appointment(Appointment(
+        'A2', clinic.patient, clinic.practitioner, TEN_AM,
+        AppointmentStatus.COMPLETED,
+    ))
+    clinic.appointments.book_appointment('A1', 'P2', 'D1', TEN_AM)
+    clinic.appointments.book_appointment('A3', 'P1', 'D1', NINE_AM)
+    clinic.appointments.book_appointment('A4', 'P2', 'D2', NINE_AM)
+    clinic.appointments.cancel_appointment('A1')
+    return clinic
+
+
+def ids(appointments: list[Appointment]) -> list[str]:
+    """Return the appointment IDs in the order given."""
+    return [appointment.appointment_id for appointment in appointments]
+
+
+def test_listing_defaults_to_every_status_in_order() -> None:
+    """Verify no status lists all statuses by time, then appointment ID."""
+    clinic = make_busy_clinic()
+    result = clinic.appointments.list_practitioner_appointments('D1')
+    assert ids(result) == ['A3', 'A1', 'A2']
+
+
+def test_listing_only_includes_the_requested_practitioner() -> None:
+    """Verify another practitioner's appointments are not returned."""
+    clinic = make_busy_clinic()
+    result = clinic.appointments.list_practitioner_appointments('D2')
+    assert ids(result) == ['A4']
+
+
+@pytest.mark.parametrize(
+    ('status', 'expected'),
+    [
+        (AppointmentStatus.SCHEDULED, ['A3']),
+        (AppointmentStatus.CANCELLED, ['A1']),
+        (AppointmentStatus.COMPLETED, ['A2']),
+    ],
+    ids=['scheduled', 'cancelled', 'completed'],
+)
+def test_listing_filters_by_status(
+    status: AppointmentStatus,
+    expected: list[str],
+) -> None:
+    """Verify an explicit status returns only matching appointments."""
+    clinic = make_busy_clinic()
+    result = clinic.appointments.list_practitioner_appointments('D1', status)
+    assert ids(result) == expected
+
+
+def test_listing_keeps_cancelled_history() -> None:
+    """Verify cancelling keeps the appointment in the default listing."""
+    clinic = make_clinic()
+    booked = clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    clinic.appointments.cancel_appointment('A1')
+    result = clinic.appointments.list_practitioner_appointments('D1')
+    assert result == [booked]
+    assert result[0].status is AppointmentStatus.CANCELLED
+    assert clinic.appointments.list_practitioner_appointments(
+        'D1', AppointmentStatus.SCHEDULED,
+    ) == []
+
+
+def test_listing_known_practitioner_without_matches_is_empty() -> None:
+    """Verify a known practitioner with no matches gets an empty list."""
+    clinic = make_clinic()
+    assert clinic.appointments.list_practitioner_appointments('D1') == []
+    clinic.appointments.book_appointment('A1', 'P1', 'D1', NINE_AM)
+    assert clinic.appointments.list_practitioner_appointments(
+        'D1', AppointmentStatus.CANCELLED,
+    ) == []
+
+
+def test_listing_normalises_padded_practitioner_id() -> None:
+    """Verify a padded practitioner ID finds the same appointments."""
+    clinic = make_busy_clinic()
+    result = clinic.appointments.list_practitioner_appointments('  D1  ')
+    assert ids(result) == ['A3', 'A1', 'A2']
+
+
+def test_listing_returns_a_new_list_of_the_stored_objects() -> None:
+    """Verify the result is a new list sharing the stored objects."""
+    clinic = make_busy_clinic()
+    result = clinic.appointments.list_practitioner_appointments('D1')
+    assert result is not clinic.data_store.list_appointments()
+    for appointment in result:
+        assert appointment is clinic.data_store.find_appointment(
+            appointment.appointment_id,
+        )
+    before = snapshot(clinic.data_store)
+    result.clear()
+    assert snapshot(clinic.data_store) == before
+    assert len(clinic.appointments.list_practitioner_appointments('D1')) == 3
+
+
+def test_listing_unknown_practitioner_raises_without_mutation() -> None:
+    """Verify an unknown practitioner raises LookupError, state unchanged."""
+    clinic = make_busy_clinic()
+    before = snapshot(clinic.data_store)
+    with pytest.raises(LookupError):
+        clinic.appointments.list_practitioner_appointments('missing')
+    assert snapshot(clinic.data_store) == before
+
+
+@pytest.mark.parametrize('blank', ['', '   ', None])
+def test_listing_blank_practitioner_id_rejected(blank: Any) -> None:
+    """Verify a blank or invalid practitioner ID raises ValueError."""
+    clinic = make_busy_clinic()
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.appointments.list_practitioner_appointments(blank)
+    assert snapshot(clinic.data_store) == before
+
+
+@pytest.mark.parametrize(
+    'bad_status',
+    ['scheduled', 'SCHEDULED', 42, object()],
+    ids=['lowercase-text', 'uppercase-text', 'number', 'object'],
+)
+def test_listing_invalid_status_rejected(bad_status: Any) -> None:
+    """Verify a non-enum status raises ValueError, state unchanged."""
+    clinic = make_busy_clinic()
+    before = snapshot(clinic.data_store)
+    with pytest.raises(ValueError):
+        clinic.appointments.list_practitioner_appointments('D1', bad_status)
+    assert snapshot(clinic.data_store) == before
