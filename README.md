@@ -1,39 +1,3 @@
-# DUE IN
-<!-- COUNTDOWN_START -->
-⚠️ **Time Remaining:** Only **12 hours** left to submit!
-<!-- COUNTDOWN_END -->
-<!-- ISSUE_TRACKER_START -->
-
-*Automatically updated by GitHub Actions. 1 open issues.*
-
-### AL — DaRealElementus
-
-_No open issues assigned._
-
-### ND — BilyFlowers
-
-_No open issues assigned._
-
-### RW — Proffo1
-
-_No open issues assigned._
-
-### AR — ExpertKaos
-
-**Assigned to ExpertKaos**
-
-- [#16: Update `project/README.md`](https://github.com/DaRealElementus/ST1-ASS3/issues/16)
-
-**Unassigned issues**
-
-_No unassigned issues._
-
-### Other assignees
-
-_No issues assigned to other users._
-
-<!-- ISSUE_TRACKER_END -->
-
 # Software Technology 1 Assignment 3
 
 One group repository and one evolving SmartCare application.
@@ -41,13 +5,17 @@ Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves 
 
 ## Group index
 
-- Group and tutorial: [complete]
-- Member names, GitHub usernames and UG/PG cohorts: [complete]
-- Shared repository URL: [complete]
-- Latest completed stage: [complete]
-- Verified code SHA: [complete]
-- Test command, working directory and observed result: [complete]
-- Final submitted SHA, if different from tested code SHA: [complete; explain evidence-only changes]
+- Group and tutorial: RW, AR, AL, ND; tutorial [TODO: tutorial code]
+- Member names, GitHub usernames and UG/PG cohorts:
+  - Alex Larkings (AL), [DaRealElementus](https://github.com/DaRealElementus), UG
+  - Rhys Watson (RW), [Proffo1](https://github.com/Proffo1), UG
+  - Andrew Rainey (AR), [expertkaos](https://github.com/expertkaos), UG
+  - Nemika De Zoysa (ND), [BilyFlowers](https://github.com/BilyFlowers), UG
+- Shared repository URL: <https://github.com/DaRealElementus/ST1-ASS3>
+- Latest completed stage: Stage 12 (UG pathway 6 → 7 → 8 → 9 → 12; Stages 10/11 PG-only, templates retained unchanged)
+- Verified code SHA: `9c57409a192be6fe979e144ff6f75f654974bdb4`
+- Test command, working directory and observed result: `python -m pytest -q` in `project/`: 229 passed, 0 failed (pytest 8.3.5; also 229 passed on a fresh clone). See [Stage 12 section C](stage12/stage12_activities_and_evidence.md#c-full-regression-results).
+- Final submitted SHA, if different from tested code SHA: [TODO: SHA of `main` after the Stage 12 merge]. Later commits change documentation and records only; `project/` code and tests are unchanged from the tested SHA.
 
 Do not put student IDs, private peer ratings, credentials or personal contact details here.
 
