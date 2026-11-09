@@ -109,9 +109,9 @@ Record: `stage09/stage09_activities_and_evidence.md`
 | [ ] | `select_appointments` – pure, explicit inputs, new list (QRY-01/02/03, FP-01/02) | AL + RW (pair) | AR |
 | [ ] | `AppointmentService.list_practitioner_appointments` – validation, LookupError/ValueError (QRY-04) | AR | AL |
 | [x] | `run_menu` in `console.py` – full menu, status text → enum, recovers from bad input (UI-01/02) | RW + ND | AL |
-| [ ] | `tests/test_queries.py` – purity, sorting, filters, empty list, errors | ND | AL |
-| [ ] | `tests/test_workflows.py` – end-to-end console session incl. invalid input recovery | AR + ND | RW |
-| [ ] | Update `project/README.md` (setup, menu usage, demo sequence) | AR | ND |
+| [x] | `tests/test_queries.py` – purity, sorting, filters, empty list, errors | ND | AL |
+| [x] | `tests/test_workflows.py` – end-to-end console session incl. invalid input recovery | AR + ND | RW |
+| [x] | Update `project/README.md` (setup, menu usage, demo sequence) | AR | ND |
 | [ ] | Critique bounded Copilot advice | All | – |
 | [ ] | All tests retained and passing; **common Stage 9 SHA recorded and protected** (tag it) | AR | All |
 | [ ] | Stage 9 record complete | ND | AR |
