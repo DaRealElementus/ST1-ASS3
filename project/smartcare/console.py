@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 
 from smartcare.data_store import SmartCareDataStore
-from smartcare.domain import Appointment
+from smartcare.domain import Appointment, AppointmentStatus
 from smartcare.services import (
     AppointmentService,
     PatientService,
@@ -40,6 +40,24 @@ def format_appointment(appointment: Appointment) -> str:
         f'{appointment.practitioner.practitioner_id}, '
         f'{appointment.date_time:%Y-%m-%d %H:%M}, {appointment.status.value}'
     )
+
+
+def parse_status(text: str) -> AppointmentStatus | None:
+    """Convert status text to the enum; blank means every status.
+
+    Matching ignores case and surrounding spaces. Raise ValueError for
+    any other text.
+    """
+    cleaned = text.strip().lower()
+    if not cleaned:
+        return None
+    try:
+        return AppointmentStatus(cleaned)
+    except ValueError:
+        allowed = ', '.join(status.value for status in AppointmentStatus)
+        raise ValueError(
+            f'Status must be one of {allowed}, or blank for all',
+        ) from None
 
 
 def run_demo() -> None:
@@ -137,6 +155,30 @@ def find_appointment(appointments: AppointmentService) -> None:
     ))
 
 
+def cancel_appointment(appointments: AppointmentService) -> None:
+    """Read an appointment ID and cancel it through the service."""
+    appointment = appointments.cancel_appointment(
+        input('Appointment ID: '),
+    )
+    print(f'Cancelled {format_appointment(appointment)}')
+
+
+def list_practitioner_appointments(appointments: AppointmentService) -> None:
+    """Read a practitioner ID and optional status; list the matches."""
+    practitioner_id = input('Practitioner ID: ')
+    status = parse_status(
+        input('Status (scheduled/cancelled/completed, blank for all): '),
+    )
+    matches = appointments.list_practitioner_appointments(
+        practitioner_id,
+        status,
+    )
+    if not matches:
+        print('No appointments found.')
+    for appointment in matches:
+        print(format_appointment(appointment))
+
+
 def run_menu() -> None:
     """Run the register/find/book/cancel/list/exit menu.
 
@@ -154,6 +196,8 @@ def run_menu() -> None:
         '4': lambda: find_practitioner(practitioners),
         '5': lambda: book_appointment(appointments),
         '6': lambda: find_appointment(appointments),
+        '7': lambda: cancel_appointment(appointments),
+        '8': lambda: list_practitioner_appointments(appointments),
     }
     while True:
         print(MENU)
@@ -164,9 +208,6 @@ def run_menu() -> None:
         if choice == '0':
             print('Session-only data: records are lost on exit.')
             return
-        if choice in ('7', '8'):
-            print('Not yet available.')
-            continue
         action = actions.get(choice)
         if action is None:
             print('Unknown option; choose a number from the menu.')

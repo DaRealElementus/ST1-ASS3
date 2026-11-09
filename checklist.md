@@ -43,7 +43,7 @@ Record: `stage06/stage06_activities_and_evidence.md`
 | [x] | Human review notes written **before** Copilot comparison | Each reviewer | – |
 | [x] | Copilot use logged (prompt, output summary, check, Accept/Modify/Reject, reason, link) | Each owner | – |
 | [x] | All merged; everyone pulled; full suite passes; SHA recorded | RW | All |
-| [ ] | Stage 6 record complete (own words, links to issues/PRs/tests/results) | ND | RW |
+| [x] | Stage 6 record complete (own words, links to issues/PRs/tests/results) | ND | RW |
 
 ---
 
@@ -60,7 +60,7 @@ Record: `stage07/stage07_activities_and_evidence.md`
 | [x] | Critique Copilot test candidates (what was accepted/modified/rejected and why) | All | – |
 | [x] | Production fixes **only** for evidenced defects (link failing test) | As found | Other |
 | [x] | Individual + full test runs recorded honestly (command, dir, result, SHA) | AR | – |
-| [ ] | Stage 7 record complete | RW | AL |
+| [x] | Stage 7 record complete | RW | AL |
 
 ---
 
@@ -91,7 +91,7 @@ Record: `stage09/stage09_activities_and_evidence.md`
 | [ ] | `appointment_sort_key` (FP-03, QRY-03) | AL | RW |
 | [ ] | `select_appointments` – pure, explicit inputs, new list (QRY-01/02/03, FP-01/02) | AL + RW (pair) | AR |
 | [ ] | `AppointmentService.list_practitioner_appointments` – validation, LookupError/ValueError (QRY-04) | AR | AL |
-| [ ] | `run_menu` in `console.py` – full menu, status text → enum, recovers from bad input (UI-01/02) | RW + ND | AL |
+| [x] | `run_menu` in `console.py` – full menu, status text → enum, recovers from bad input (UI-01/02) | RW + ND | AL |
 | [ ] | `tests/test_queries.py` – purity, sorting, filters, empty list, errors | ND | AL |
 | [ ] | `tests/test_workflows.py` – end-to-end console session incl. invalid input recovery | AR + ND | RW |
 | [ ] | Update `project/README.md` (setup, menu usage, demo sequence) | AR | ND |
