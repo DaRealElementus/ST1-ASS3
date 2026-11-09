@@ -4,11 +4,11 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 4 open issues.*
+*Automatically updated by GitHub Actions. 3 open issues.*
 
 ### AL — DaRealElementus
 
-- [#11: query/select_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/11)
+_No open issues assigned._
 
 ### ND — BilyFlowers
 
@@ -17,7 +17,7 @@
 
 ### RW — Proffo1
 
-- [#11: query/select_appointments](https://github.com/DaRealElementus/ST1-ASS3/issues/11)
+_No open issues assigned._
 
 ### AR — ExpertKaos
 
