@@ -75,14 +75,14 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 
 ## C. F8-01 diagnosis and repair
 
-- Symptom / observed behaviour: [complete]
-- Expected behaviour and requirement: [complete]
-- Minimal synthetic reproduction steps: [complete]
-- Meaningful failing test path/name and exact relevant failure: [complete]
+- Symptom / observed behaviour: At the prepared faulty baseline (HEAD `cd6393a`), the `!=` practitioner-ID predicate reports a conflict between different practitioners at the same scheduled time and fails to report one for the same practitioner. The in-memory reproduction of `test_services.py::test_different_practitioners_can_share_a_time` produced `ValueError: Practitioner already has a SCHEDULED appointment at this time` while booking D2 after D1 at 2026-10-01 09:00.
+- Expected behaviour and requirement: A scheduled appointment conflicts only when its practitioner ID and exact date/time both match the proposed booking (AC-04.x). A different practitioner may be booked at the same time; a second booking for the same practitioner and time must be rejected.
+- Minimal synthetic reproduction steps: Register synthetic patients P1 and P2 and practitioners D1 and D2. Book A1 for P1 with D1 at 2026-10-01 09:00, then book A2 for P2 with D2 at that same time. The faulty predicate incorrectly rejects A2. Repeat with D1 for A2: the faulty predicate incorrectly accepts the double-booking.
+- Meaningful failing test path/name and exact relevant failure: `project/tests/test_services.py::test_different_practitioners_can_share_a_time` fails under the prepared `!=` predicate with `ValueError: Practitioner already has a SCHEDULED appointment at this time`. This failure was reproduced by running the test function with the faulty predicate injected in memory; the working tree already contains the one-operator repair.
 - Human hypothesis and intended checks: see E, F8-01.
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: Confirmed. `project/smartcare/data_store.py`, `SmartCareDataStore.has_practitioner_conflict`, used `appointment.practitioner.practitioner_id != practitioner_id`. That matches different practitioner IDs and misses equal IDs. The committed baseline has `!=`; the current working-tree diff changes only that operator to `==`.
+- Smallest justified fix / diff / why other behaviour is preserved: Change `!=` to `==` in the practitioner-ID condition. The appointment exclusion, exact date/time match, and scheduled-status checks are unchanged, so update exclusions, time boundaries, and cancelled/completed appointment handling retain their prior behavior.
+- Repair SHA / focused verification result: No repair commit SHA yet; the repair is uncommitted on top of HEAD `cd6393a2ca5e25571f3eb4f1b99fc64769a03e21`. From `project/`, `python -m pytest -q tests/test_services.py::test_different_practitioners_can_share_a_time tests/test_starter.py::test_conflict_rule_and_different_practitioner` passed: `2 passed in 0.02s`.
 
 ## D. F8-02 diagnosis and repair
 
@@ -103,9 +103,9 @@ Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/
 
 ### F8-01 human entry
 
-Likely cause and why plausible: [complete]
-Evidence intended to inspect / competing explanation / discriminating check: [complete]
-Member and saved sequence/time or commit showing this preceded consultation: [complete]
+Likely cause and why plausible: The practitioner-ID comparison in `has_practitioner_conflict` may be inverted (`!=` instead of `==`). A conflict requires the existing scheduled appointment to belong to the same practitioner, so `!=` would incorrectly flag a different practitioner's booking and miss a same-practitioner double-booking.
+Evidence intended to inspect / competing explanation / discriminating check: Inspect the practitioner-ID, exact date/time, scheduled-status, and excluded-appointment conditions in `has_practitioner_conflict`, then compare them with AC-04.x. Run `test_different_practitioners_can_share_a_time` and `test_conflict_rule_and_different_practitioner`; reproduce one same-practitioner/same-time booking that must be rejected and one different-practitioner/same-time booking that must be allowed. A date/time or status-filter defect is a competing explanation, distinguished by checking those predicates and varying only the practitioner ID.
+Member and saved sequence/time or commit showing this preceded consultation: RW; hypothesis supplied in the initial user request before Copilot review in this conversation. No separate saved sequence/time or commit identifier was provided.
 
 ### F8-02 human entry
 
@@ -119,12 +119,12 @@ Use the full handout prompt separately for BOTH defects, after E. Keep each actu
 
 ### F8-01 Copilot review
 
-Actual prompt / output reference and member: [complete]
+Actual prompt / output reference and member: RW requested the F8-01 Copilot review in this conversation. Review prompt: “Diagnose F8-01 without rewriting unrelated code or inventing requirements. Observed behaviour: the prepared baseline rejects simultaneous bookings by different practitioners and permits the same practitioner to be double-booked. Expected behaviour: reject only a second scheduled appointment for the same practitioner at the exact same date/time; allow different practitioners at that time. Minimal reproduction: book D1 at 2026-10-01 09:00, then try D2 at the same time and D1 again at that time. Meaningful test: `project/tests/test_services.py::test_different_practitioners_can_share_a_time`, with `project/tests/test_starter.py::test_conflict_rule_and_different_practitioner` as a companion. Human hypothesis: the practitioner-ID comparison in `has_practitioner_conflict` is inverted (`!=` instead of `==`). Inspect the controlling code and rank three causes, giving a discriminating check and evidence for each; recommend only the smallest supported change.” Output: the ranked review below, in this Copilot response and recorded here; no separate exported transcript or artifact exists.
 
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+1. Ranked suggestion: Inverted practitioner-ID comparison is the root cause. Evidence check: inspect `SmartCareDataStore.has_practitioner_conflict` and exercise same-time bookings with D1 and D2. Observed evidence: the prepared baseline compares `appointment.practitioner.practitioner_id != practitioner_id`; injecting that predicate into `test_different_practitioners_can_share_a_time` raises `ValueError: Practitioner already has a SCHEDULED appointment at this time`. The current one-operator `==` working-tree change passes both named focused tests (`2 passed`). Correct; accept. It explains both false conflicts for different IDs and missed conflicts for equal IDs, and changing only the operator preserves the date/time, scheduled-status, and exclusion checks.
+2. Ranked suggestion: The service may pass the wrong practitioner ID or fail to normalize the requested ID. Evidence check: inspect `AppointmentService.book_appointment` and the practitioner lookup. Observed evidence: booking looks up the requested ID, then passes the registered practitioner's canonical `practitioner_id` to the conflict check; `find_practitioner` validates and trims IDs. Wrong argument/normalization is not supported as the root cause; reject. The mismatch is inside the store predicate.
+3. Ranked suggestion: The date/time, appointment-status, exclusion, or appointment-list conditions may create the conflict mismatch. Evidence check: inspect every remaining conjunct and compare bookings varying only practitioner ID. Observed evidence: the predicate uses exact datetime equality and scheduled status, and excludes the requested appointment ID; none explains the opposite outcomes by practitioner identity. These conditions are consistent with the stated requirement and are unchanged by the fix. Reject as the cause; retain them.
+Final human conclusion and comparison with initial hypothesis: The evidence confirms RW's initial `!=` versus `==` hypothesis; no inspected alternative explains the reproduced failure as directly. Copilot recommends accepting the diagnosis and the one-operator fix. RW's separate post-review accept/modify/reject decision has not been provided, so this record does not attribute that decision to RW.
 
 ### F8-02 Copilot review
 
