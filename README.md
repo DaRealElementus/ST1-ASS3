@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 2 open issues.*
+*Automatically updated by GitHub Actions. 1 open issues.*
 
 ### AL — DaRealElementus
 
@@ -12,7 +12,7 @@ _No open issues assigned._
 
 ### ND — BilyFlowers
 
-- [#15: tests/test_workflows.py](https://github.com/DaRealElementus/ST1-ASS3/issues/15)
+_No open issues assigned._
 
 ### RW — Proffo1
 
@@ -23,7 +23,6 @@ _No open issues assigned._
 **Assigned to ExpertKaos**
 
 - [#16: Update `project/README.md`](https://github.com/DaRealElementus/ST1-ASS3/issues/16)
-- [#15: tests/test_workflows.py](https://github.com/DaRealElementus/ST1-ASS3/issues/15)
 
 **Unassigned issues**
 
