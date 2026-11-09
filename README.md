@@ -4,7 +4,7 @@
 <!-- COUNTDOWN_END -->
 <!-- ISSUE_TRACKER_START -->
 
-*Automatically updated by GitHub Actions. 3 open issues.*
+*Automatically updated by GitHub Actions. 2 open issues.*
 
 ### AL — DaRealElementus
 
@@ -13,7 +13,6 @@ _No open issues assigned._
 ### ND — BilyFlowers
 
 - [#15: tests/test_workflows.py](https://github.com/DaRealElementus/ST1-ASS3/issues/15)
-- [#14: tests/test_queries.py](https://github.com/DaRealElementus/ST1-ASS3/issues/14)
 
 ### RW — Proffo1
 
