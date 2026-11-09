@@ -89,6 +89,8 @@ class SmartCareDataStore:
     def find_appointment(self, appointment_id: str) -> Appointment | None:
         """Return the stored appointment or None; reject blank IDs with
         ValueError.
+
+        Cancelled and completed appointments are retained and returned.
         """
         return self._appointments.get(
             required_text(appointment_id, 'Appointment ID'),

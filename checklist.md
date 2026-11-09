@@ -72,13 +72,30 @@ Record: `stage08/stage08_activities_and_evidence.md`
 | [ ] | Get Stage 8 utility from tutor; keep it **outside** the repo (`Stage_8_Assets/` sibling) | ND | – |
 | [ ] | Clean debugging branch created from verified `main` | ND | – |
 | [ ] | Human hypotheses recorded **before** Copilot | All | – |
-| [ ] | Fault 1: reproduce symptom → diagnose → minimal repair in `data_store.py` | RW + AR (pair) | AL |
-| [ ] | Fault 2: reproduce symptom → diagnose → minimal repair in `data_store.py` | AL + ND (pair) | RW |
-| [ ] | Add `tests/test_regressions.py` covering both faults | AR | ND |
-| [ ] | Focused + full tests run before and after repairs | ND | – |
-| [ ] | One justified refactoring; full suite passes before and after | AL + RW (pair) | AR |
+| [x] | Fault 1: reproduce symptom → diagnose → minimal repair in `data_store.py` | RW + AR (pair) | AL |
+| [x] | Fault 2: reproduce symptom → diagnose → minimal repair in `data_store.py` | AL + ND (pair) | RW |
+| [x] | Add `tests/test_regressions.py` covering both faults | AR | ND |
+| [x] | Focused + full tests run before and after repairs | ND | – |
+| [x] | One justified refactoring; full suite passes before and after | AL + RW (pair) | AR |
 | [ ] | No utility/recovery files committed | All | – |
 | [ ] | Stage 8 record complete (both causes explained) | RW | AL |
+
+### Stage 8 debugging hints
+
+Starting point on `Stage-8-Debugging`: `cd project` → `python -m pytest -q` gives **8 failed, 172 passed**. The tutor's tool introduced two faults, both in `project/smartcare/data_store.py`. Work out the exact cause yourselves and record your hypotheses before using Copilot. Don't just revert the commit or edit the tests.
+
+- [x] **F8-01 – practitioner conflict.**
+  - *Where to look:* `has_practitioner_conflict`.
+  - *Symptom to reproduce:* Book the same practitioner twice at the same time and see whether it's rejected. Then try two *different* practitioners at the same time.
+  - *Hint:* Read each condition in the `if` aloud and ask which appointments it should match. Compare it with the requirement for a conflict (AC-04.x).
+  - *Failing tests to start from:* `test_different_practitioners_can_share_a_time`, `test_conflict_rule_and_different_practitioner`
+- [x] **F8-02 – retained-history lookup.**
+  - *Where to look:* `find_appointment`.
+  - *Symptom to reproduce:* Book an appointment, cancel it, then try to find it, and try cancelling it a second time.
+  - *Hint:* What should happen to a cancelled appointment's record (FR-06/07, AC-05.x, AC-06.1)? Does the lookup treat every stored appointment the same way?
+  - *Failing tests to start from:* `test_find_appointment_returns_cancelled_record`, `test_cancel_retains_appointment_and_guards_repeat`
+- [x] **Refactoring idea:** Compare these two methods with the other `find_*` methods in the same file. What's inconsistent (validation, docstrings, how the lookup is done)?
+- [x] **Regression tests:** The tutor notes the existing suite may not catch everything. Write `test_regressions.py` tests that target each fault directly.
 
 ---
 
