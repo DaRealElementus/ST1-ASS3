@@ -26,7 +26,8 @@ def select_appointments(
     """
     result: list = []
     for a in appointments:
-        if a.practitioner.practitioner_id == practitioner_id:
+        if a.practitioner.practitioner_id == practitioner_id and (
+            status is None or a.status == status):
             result.append(a)
 
     return sorted(result, key=appointment_sort_key)
